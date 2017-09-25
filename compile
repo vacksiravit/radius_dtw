@@ -1,0 +1,10 @@
+#!/bin/bash
+c++ client.cpp -o askme-radius $(mysql_config --cflags --include --libs)
+#cp -f askme-radius dtw/askme-solution/source
+#rm -rf askme.tar.gz
+#tar -cvzf askme.tar.gz source
+##rm -rf source 
+#cd ..
+#tar -cvzf askme.tar.gz askme-solution
+#rm -rf askme-solution
+#./askme-radius
