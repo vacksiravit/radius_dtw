@@ -85,11 +85,11 @@ int main(int argc, char *argv[])
 	char tmp[64];
 	read_config();
 	printf("\n# Version %s #\n",VERSION);
-	//printf("# <+_VacK_+> #\n");
 
 	while(1)
 	{
 		f_send = 1;
+
 		portno = atoi(PORT);
 		sockfd = socket(AF_INET, SOCK_STREAM, 0);
 		if (sockfd < 0) 
@@ -113,7 +113,8 @@ int main(int argc, char *argv[])
 		{
 			error("ERROR connecting");
 			trans_log("->","Error!! connecting socket!!");
-		}	
+		}
+
 		while(f_send)
 		{	
 			fn_strt(iden);
@@ -126,10 +127,8 @@ int main(int argc, char *argv[])
 			}
 			else
 			{
-				//strcpy(buffer,"CHECKIN|02|20092017 21:46|1301|251401|ASKME, SIRAVIT, MR.|N|20092017|22092017||E|Y||      |98");
-		
 				n_row = ReceiveString(buffer);
-			  
+				
 				if(atoi(FN_CHECKIN) == 1)
 					fn_checkin_ret(search("CHECKIN",n_row));
 				
@@ -397,7 +396,8 @@ int fn_checkin_ret(int m_found)
 	char tmp_Query[128];
 	int tmp_room;
 	char room[5];
-
+	int tmp=0;
+	const char * chk_tmp="?";
 	if(m_found != -1)
 	{
 		for(int i=0;i<m_found;i++)
@@ -420,12 +420,28 @@ int fn_checkin_ret(int m_found)
 			strcat(tmp_Query," SET value=");
 			if(atoi(LOWER_CASE) == 1)	strcat(tmp_Query,"LOWER(");
 			strcat(tmp_Query,"\"");
-			strcat(tmp_Query,(const char *)&block[found_index[i]][atoi(F_NAME_CIN)]);
+			
+// Start EDIT
+			if(atoi(FN_CHANGETHAI) == 1)
+			{
+				tmp = strcmp((const char *)&block[found_index[i]][atoi(F_NAME_CIN)],chk_tmp);
+				if((tmp <= 0) || (tmp == 63))
+					strcat(tmp_Query,REP_THAI);
+				else
+					strcat(tmp_Query,(const char *)&block[found_index[i]][atoi(F_NAME_CIN)]);		
+			}
+			else
+			{
+				strcat(tmp_Query,(const char *)&block[found_index[i]][atoi(F_NAME_CIN)]);		
+			}
+// END EDIT			
+			
 			strcat(tmp_Query,"\"");
 			if(atoi(LOWER_CASE) == 1)	strcat(tmp_Query,")");
 			strcat(tmp_Query," WHERE username LIKE \"");
 			strcat(tmp_Query,room);
 			strcat(tmp_Query,"\";");
+			//printf("Query Command = %s\n",tmp_Query);
 			UpdateMySQL(tmp_Query,0);
 			
 			if(atoi(DEBUG)==2)
