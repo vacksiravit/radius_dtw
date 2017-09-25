@@ -387,6 +387,7 @@ int fn_guestchange_ret(int m_found)
 				//strcat(tmp_log,",N=");	sprintf(tmp,"%d",block_len[found_index[i]]-1);	strcat(tmp_log,tmp);
 				//trans_log("ROOMMOVE",tmp_log);
 				//bzero(tmp_log,sizeof(tmp_log));
+				printf("Siravit\n");
 			}
 		}
 	}
